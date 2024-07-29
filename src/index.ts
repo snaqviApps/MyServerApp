@@ -25,15 +25,8 @@ const app = express();
  * add Middleware to be able to read request being sent by 'POST' method
  * 
  * */
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use((request, response, next) => {
-    request.on("data", (chunk) => {         //1. read, manipulate data
-      console.log(chunk);
-      request.body = JSON.parse(chunk);
-    });
-    next();                                 //2. now calling this function, if moving forward is OK
-});
+app.use(express.json());                                    // handles data-parsing requirements from fetch-post() type requests
+app.use(express.urlencoded({ extended: false }));           // handles data-parsing requirements from html-from type requests
 
 // creae 'home' route
 app.post(
