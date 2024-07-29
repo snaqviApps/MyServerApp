@@ -1,4 +1,6 @@
 
+import express from 'express';
+
 /**
  * step: 01 ---> create a server
  * we need to go to site called 
@@ -12,22 +14,38 @@
  *     'tsc' 
  *  e. start the server by this:
  *     'node index.js'
- *  f. stop the server by pressing 'control + c' ()
+ *  f. stop the server by pressing 'control + c'
  * 
- **/ 
-import express from 'express';
+ **/
 
 // create server
 const app = express();
 
-// add middleware to be able to read request being sent by 'POST' method
+/**
+ * add Middleware to be able to read request being sent by 'POST' method
+ * 
+ * */
 app.use(express.json());
-app.use(express.urlencoded({extended : false}));
+app.use(express.urlencoded({ extended: false }));
+app.use((request, response, next) => {
+    request.on("data", (chunk) => {         //1. read, manipulate data
+      console.log(chunk);
+      request.body = JSON.parse(chunk);
+    });
+    next();                                 //2. now calling this function, if moving forward is OK
+});
 
 // creae 'home' route
-app.post('/', (request, response) => {
-    console.log(request.body)
-    response.json({"message" : "Hi from MyServerApp"})
+app.post(
+    "/", (request, response) => {
+    console.log(request.body);
+    response.json({ "message":  "I am listening!" });
+});
+
+app.post(
+    "/create", (request, response) => {
+    console.log(request.body);
+    response.json({ "message":  "I am listening to create" });
 });
 
 // listen to the port
