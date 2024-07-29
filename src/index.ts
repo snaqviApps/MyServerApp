@@ -20,9 +20,14 @@ import express from 'express';
 // create server
 const app = express();
 
+// add middleware to be able to read request being sent by 'POST' method
+app.use(express.json());
+app.use(express.urlencoded({extended : false}));
+
 // creae 'home' route
-app.get('/', (request, response) => {
-        response.send('<h1>Hi from React-Native, setup is done as node project</h1>')
+app.post('/', (request, response) => {
+    console.log(request.body)
+    response.json({"message" : "Hi from MyServerApp"})
 });
 
 // listen to the port
